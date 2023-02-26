@@ -1,0 +1,22 @@
+{
+  "name": "wille",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "wille": "bin/wille.js"
+  },
+  "scripts": {
+    "start": "tsc -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.14.1",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "cac": "^6.7.14"
+  }
+}
