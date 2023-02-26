@@ -3,7 +3,6 @@ import { Plugin } from "vite";
 import { DEFAULT_HTML_PATH, CLIENT_ENTRY_PATH, PACKAGE_ROOT } from "../const";
 
 export const pluginHtml = (): Plugin => {
-  console.log(PACKAGE_ROOT, 'package root')
   return {
     name: "wille:html",
     apply: "serve",
