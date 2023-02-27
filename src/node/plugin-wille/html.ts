@@ -1,44 +1,44 @@
-import { readFile } from "fs/promises"
-import { Plugin } from "vite";
-import { DEFAULT_HTML_PATH, CLIENT_ENTRY_PATH, PACKAGE_ROOT } from "../const";
+import { readFile } from 'fs/promises';
+import { Plugin } from 'vite';
+import { DEFAULT_HTML_PATH, CLIENT_ENTRY_PATH } from '../const';
 
 export const pluginHtml = (): Plugin => {
   return {
-    name: "wille:html",
-    apply: "serve",
+    name: 'wille:html',
+    apply: 'serve',
     transformIndexHtml(html) {
       return {
         html,
-        tags:[
+        tags: [
           {
-            tag: "script",
+            tag: 'script',
             attrs: {
-              type: "module",
+              type: 'module',
               src: `/@fs/${CLIENT_ENTRY_PATH}`
             },
             injectTo: 'body'
           }
         ]
-      }
+      };
     },
-    configureServer (server) {
+    configureServer(server) {
       return () => {
-        server.middlewares.use(async(req, res, next) => {
-          let html = await readFile(DEFAULT_HTML_PATH, "utf-8")
+        server.middlewares.use(async (req, res, next) => {
+          let html = await readFile(DEFAULT_HTML_PATH, 'utf-8');
           try {
             html = await server.transformIndexHtml(
               req.url as string,
               html,
               req.originalUrl
-            )
-            res.statusCode = 200
-            res.setHeader("Content-Type", "text/html")
-            res.end(html)
+            );
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/html');
+            res.end(html);
           } catch (e) {
-            return next(e)
+            return next(e);
           }
-        })
-      }
+        });
+      };
     }
-  } 
-}
+  };
+};

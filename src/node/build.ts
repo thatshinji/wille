@@ -1,22 +1,21 @@
 import pluginReact from '@vitejs/plugin-react';
-import { pathToFileURL } from 'url'
+import { pathToFileURL } from 'url';
 import { join } from 'path';
-import { build as viteBuild, InlineConfig } from "vite"
-import fs from 'fs-extra'
-import { CLIENT_ENTRY_PATH, SSR_ENTRY_PATH } from "./const"
-import type { RollupOutput } from 'rollup'
+import { build as viteBuild, InlineConfig } from 'vite';
+import fs from 'fs-extra';
+import { CLIENT_ENTRY_PATH, SSR_ENTRY_PATH } from './const';
+import type { RollupOutput } from 'rollup';
 
 export const build = async (root: string = process.cwd()) => {
-  // @ts-ignore
-  const [clientBuild] = await bundle(root)
+  const [clientBuild] = await bundle(root);
 
-  const serverEntryPath = join(root, '.temp', 'ssr-entry.js')
-  const { render } = (await import(pathToFileURL(serverEntryPath).toString()))
-  await renderPage(render, root, clientBuild)
-}
+  const serverEntryPath = join(root, '.temp', 'ssr-entry.js');
+  const { render } = await import(pathToFileURL(serverEntryPath).toString());
+  await renderPage(render, root, clientBuild);
+};
 
 export const bundle = async (root: string) => {
-  const resolveConfig = (isServer:boolean): InlineConfig => ({
+  const resolveConfig = (isServer: boolean): InlineConfig => ({
     mode: 'production',
     root,
     plugins: [pluginReact()],
@@ -27,31 +26,33 @@ export const bundle = async (root: string) => {
       rollupOptions: {
         input: isServer ? SSR_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: isServer
-          ? { format: 'cjs', entryFileNames: '[name].js'}
+          ? { format: 'cjs', entryFileNames: '[name].js' }
           : { format: 'esm', entryFileNames: '[name].js' }
       }
     }
-  })
+  });
 
   try {
     const [clientBundle, serverBundle] = await Promise.all([
       viteBuild(resolveConfig(false)),
-      viteBuild(resolveConfig(true)),
+      viteBuild(resolveConfig(true))
     ]);
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 export const renderPage = async (
   render: () => string,
   root: string,
   clientBuild: RollupOutput
-  ) => {
-    const clientChunk = clientBuild.output.find((chunk) => chunk.type === 'chunk' && chunk.isEntry)
-    const appHtml = render()
-    const html = `
+) => {
+  const clientChunk = clientBuild.output.find(
+    (chunk) => chunk.type === 'chunk' && chunk.isEntry
+  );
+  const appHtml = render();
+  const html = `
     <!DOCTYPE html>
       <head>
         <meta charset="utf-8">
@@ -64,9 +65,9 @@ export const renderPage = async (
         <script type="module" src="./${clientChunk?.fileName}"></script>
       </body>
     </html>
-    `.trim()
+    `.trim();
 
-    await fs.ensureDir(join(root, "build"));
-    await fs.writeFile(join(root, "build/index.html"), html);
-    await fs.remove(join(root, ".temp"));
-}
+  await fs.ensureDir(join(root, 'build'));
+  await fs.writeFile(join(root, 'build/index.html'), html);
+  await fs.remove(join(root, '.temp'));
+};
