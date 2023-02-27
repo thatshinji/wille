@@ -4,3 +4,4 @@ build
 .temp
 docs/build
 .idea
+.fleet
