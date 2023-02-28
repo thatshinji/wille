@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import { loadConfigFromFile } from 'vite';
 import { UserConfig } from '../shared/types';
 
@@ -28,10 +28,10 @@ export const resolveConfig = async (
 ) => {
   // get file path
   const configPath = getUserConfigPath(root);
-  //get config content
-  const result = loadConfigFromFile({ command, mode }, configPath, root);
+  // get config content
+  const result = await loadConfigFromFile({ command, mode }, configPath, root);
   if (result) {
-    const { config: rawConfig = {} as RawConfig } = result || { config: {} };
+    const { config: rawConfig = {} as RawConfig } = result;
     const userConfig = await (typeof rawConfig === 'function'
       ? rawConfig()
       : rawConfig);
