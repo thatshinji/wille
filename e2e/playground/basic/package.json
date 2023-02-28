@@ -1,0 +1,20 @@
+{
+	"name": "basic",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"directories": {
+		"docs": "docs"
+	},
+	"scripts": {
+		"dev": "wille dev docs",
+		"build": "wille build docs",
+		"preview": "wille start docs"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"wille": "../../.."
+	}
+}
