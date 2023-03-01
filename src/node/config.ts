@@ -40,3 +40,7 @@ export const resolveConfig = async (
     return [configPath, {} as UserConfig] as const;
   }
 };
+
+export const defineConfig = (config: UserConfig) => {
+  return config;
+};
