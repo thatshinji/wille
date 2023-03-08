@@ -4,6 +4,7 @@ import pluginReact from '@vitejs/plugin-react';
 import { PACKAGE_ROOT } from './const';
 import { pluginConfig } from './plugin-wille/config';
 import { resolveConfig } from './config';
+import { pluginRoutes } from './plugin-routes';
 
 export const createDevServer = async (
   root = process.cwd(),
@@ -11,8 +12,13 @@ export const createDevServer = async (
 ) => {
   const config = await resolveConfig(root, 'serve', 'development');
   return createViteDevServer({
-    root,
-    plugins: [pluginHtml(), pluginReact(), pluginConfig(config, restartServer)],
+    root: PACKAGE_ROOT,
+    plugins: [
+      pluginHtml(),
+      pluginReact(),
+      pluginConfig(config, restartServer),
+      pluginRoutes({ root: config.root })
+    ],
     server: {
       fs: {
         allow: [PACKAGE_ROOT]

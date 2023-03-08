@@ -1,16 +1,28 @@
 import { relative } from 'path';
 import { Plugin, ViteDevServer } from 'vite';
 import { SiteConfig } from 'shared/types';
+import { join } from 'path';
+import { PACKAGE_ROOT } from '../../node/const';
 
 const SITE_DTA_ID = 'wille:site-data';
 
 export const pluginConfig = (
   config: SiteConfig,
-  restartServer: () => Promise<void>
+  restartServer?: () => Promise<void>
 ): Plugin => {
   let server: ViteDevServer | null = null;
   return {
     name: 'wille:config',
+    config() {
+      return {
+        root: PACKAGE_ROOT,
+        resolve: {
+          alias: {
+            '@runtime': join(PACKAGE_ROOT, 'src', 'runtime', 'index.ts')
+          }
+        }
+      };
+    },
     configureServer(s) {
       server = s;
     },
@@ -32,7 +44,9 @@ export const pluginConfig = (
         console.log(
           `\n${relative(config.root, ctx.file)} changed, restarting server...`
         );
-        await restartServer();
+        if (restartServer) {
+          await restartServer();
+        }
       }
     }
   };

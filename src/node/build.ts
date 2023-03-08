@@ -5,20 +5,31 @@ import { build as viteBuild, InlineConfig } from 'vite';
 import fs from 'fs-extra';
 import { CLIENT_ENTRY_PATH, SSR_ENTRY_PATH } from './const';
 import type { RollupOutput } from 'rollup';
+import { SiteConfig } from '../shared/types';
+import { pluginConfig } from './plugin-wille/config';
 
-export const build = async (root: string = process.cwd()) => {
-  const [clientBuild] = await bundle(root);
-
+export const build = async (
+  root: string = process.cwd(),
+  config: SiteConfig
+) => {
+  const [clientBuild] = await bundle(root, config);
   const serverEntryPath = join(root, '.temp', 'ssr-entry.js');
   const { render } = await import(pathToFileURL(serverEntryPath).toString());
-  await renderPage(render, root, clientBuild);
+  try {
+    await renderPage(render, root, clientBuild);
+  } catch (e) {
+    console.log('Render Page Error', e);
+  }
 };
 
-export const bundle = async (root: string) => {
+export const bundle = async (root: string, config: SiteConfig) => {
   const resolveConfig = (isServer: boolean): InlineConfig => ({
     mode: 'production',
     root,
-    plugins: [pluginReact()],
+    plugins: [pluginReact(), pluginConfig(config)],
+    ssr: {
+      noExternal: ['react-router-dom']
+    },
     build: {
       ssr: isServer,
       assetsDir: isServer ? 'assets' : '',
@@ -55,14 +66,14 @@ export const renderPage = async (
   const html = `
     <!DOCTYPE html>
       <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width,initial-scale=1'>
         <title>title</title>
-        <meta name="description" content="xxx">
+        <meta name='description' content='xxx'>
       </head>
       <body>
-        <div id="root">${appHtml}</div>
-        <script type="module" src="./${clientChunk?.fileName}"></script>
+        <div id='root'>${appHtml}</div>
+        <script type='module' src='./${clientChunk?.fileName}'></script>
       </body>
     </html>
     `.trim();

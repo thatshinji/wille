@@ -3,6 +3,7 @@ import path from 'path';
 import { resolve } from 'path';
 import { build } from './build';
 import pkg from '../../package.json';
+import { resolveConfig } from './config';
 
 const version = pkg.version;
 
@@ -29,7 +30,8 @@ cli
   .action(async (root: string) => {
     try {
       root = resolve(root);
-      await build(root);
+      const config = await resolveConfig(root, 'build', 'production');
+      await build(root, config);
     } catch (error) {
       console.log(error);
     }

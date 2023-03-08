@@ -1,0 +1,68 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RouteService > conventional route by file structure > 
+      "
+      import React from 'react';
+      import loadable from '@loadable/component';
+      const Route0 = loadable(() => import('TEST_DIR/a.mdx'));
+      const Route1 = loadable(() => import('TEST_DIR/guide/b.mdx'));
+      export const routes = [
+        { path: '/a', element: React.createElement(Route0) },
+      { path: '/guide/b', element: React.createElement(Route1) }
+      ];
+      "
+     1`] = `
+[
+  {
+    "absolutePath": "TEST_DIR/a.mdx",
+    "routePath": "a",
+  },
+  {
+    "absolutePath": "TEST_DIR/guide/b.mdx",
+    "routePath": "guide/b",
+  },
+]
+`;
+
+exports[`RouteService > conventional route by file structure > 
+      [
+        {
+          "absolutePath": "TEST_DIR/a.mdx",
+          "routePath": "/a",
+        },
+        {
+          "absolutePath": "TEST_DIR/guide/b.mdx",
+          "routePath": "/guide/b",
+        }
+      ]
+     1`] = `
+[
+  {
+    "absolutePath": "TEST_DIR/a.mdx",
+    "routePath": "undefineda",
+  },
+  {
+    "absolutePath": "TEST_DIR/guide/b.mdx",
+    "routePath": "undefinedguide/b",
+  },
+]
+`;
+
+exports[`RouteService > generate routes code > 
+      "
+      import React from 'react';
+      import loadable from '@loadable/component';
+      const Route0 = loadable(() => import('TEST_DIR/a.mdx'));
+      const Route1 = loadable(() => import('TEST_DIR/guide/b.mdx'));
+      export const routes = [
+        { path: '/a', element: React.createElement(Route0) },
+      { path: '/guide/b', element: React.createElement(Route1) }
+      ];
+      "
+     1`] = `
+"
+  import React from 'react';
+  import loadable from '@loadable/component';
+  { path: 'a', element: React.createElement(Route0)},
+{ path: 'guide/b', element: React.createElement(Route1)}"
+`;
