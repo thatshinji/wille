@@ -15,7 +15,9 @@ export const createDevServer = async (
     root: PACKAGE_ROOT,
     plugins: [
       pluginHtml(),
-      pluginReact(),
+      pluginReact({
+        jsxRuntime: 'automatic'
+      }),
       pluginConfig(config, restartServer),
       pluginRoutes({ root: config.root })
     ],

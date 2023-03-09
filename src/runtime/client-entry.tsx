@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import App from './App';
+import App from './app';
 //import siteData from 'wille:site-data';
 import { BrowserRouter } from 'react-router-dom';
 

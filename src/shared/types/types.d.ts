@@ -3,3 +3,8 @@ declare module 'wille:site-data' {
   const siteData: UserConfig;
   export default siteData;
 }
+declare module 'wille:routes' {
+  import { RouteObject } from 'react-router-dom';
+  const routes: RouteObject[];
+  export { routes };
+}

@@ -12,7 +12,7 @@ export const build = async (
   root: string = process.cwd(),
   config: SiteConfig
 ) => {
-  const [clientBuild] = await bundle(root, config);
+  const [clientBuild]: any = await bundle(root, config);
   const serverEntryPath = join(root, '.temp', 'ssr-entry.js');
   const { render } = await import(pathToFileURL(serverEntryPath).toString());
   try {
@@ -31,15 +31,19 @@ export const bundle = async (root: string, config: SiteConfig) => {
       noExternal: ['react-router-dom']
     },
     build: {
+      minify: false,
       ssr: isServer,
       assetsDir: isServer ? 'assets' : '',
-      outDir: isServer ? '.temp' : 'build',
+      outDir: isServer ? join(root, '.temp') : 'build',
       rollupOptions: {
         input: isServer ? SSR_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: isServer
           ? { format: 'cjs', entryFileNames: '[name].js' }
           : { format: 'esm', entryFileNames: '[name].js' }
       }
+    },
+    optimizeDeps: {
+      include: ['react-router-dom']
     }
   });
 

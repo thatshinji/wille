@@ -1,7 +1,6 @@
-import { relative } from 'path';
-import { Plugin, ViteDevServer } from 'vite';
+import { relative, join } from 'path';
+import { Plugin } from 'vite';
 import { SiteConfig } from 'shared/types';
-import { join } from 'path';
 import { PACKAGE_ROOT } from '../../node/const';
 
 const SITE_DTA_ID = 'wille:site-data';
@@ -10,7 +9,7 @@ export const pluginConfig = (
   config: SiteConfig,
   restartServer?: () => Promise<void>
 ): Plugin => {
-  let server: ViteDevServer | null = null;
+  //  let server: ViteDevServer | null = null;
   return {
     name: 'wille:config',
     config() {
@@ -23,9 +22,9 @@ export const pluginConfig = (
         }
       };
     },
-    configureServer(s) {
-      server = s;
-    },
+    //    configureServer(s) {
+    //      server = s;
+    //    },
     resolveId(id) {
       if (id === SITE_DTA_ID) {
         return '\0' + SITE_DTA_ID;
